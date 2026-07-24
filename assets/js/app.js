@@ -1,17 +1,17 @@
 const API_URL = "https://yoga-api-nzy4.onrender.com/v1/poses";
 
-const moviesContainer = document.getElementById("poses");
+const posesContainer = document.getElementById("poses");
 document.getElementById("searchInput").addEventListener("input", applyFilters);
-const moviesPerPage = 6;
+const posesPerPage = 6;
 
 let currentPage = 1;
-let movies = [];
+let poses = [];
 
-let filteredMovies = [];
+let filteredposes = [];
 
 function showLoading() {
 
-    moviesContainer.innerHTML = `
+    posesContainer.innerHTML = `
         <div class="col-12 text-center my-5">
 
             <div class="spinner-border text-success"
@@ -19,27 +19,27 @@ function showLoading() {
                 <span class="visually-hidden">Loading...</span>
             </div>
 
-            <p class="mt-3">Loading Studio Ghibli movies...</p>
+            <p class="mt-3">Loading Studio Ghibli poses...</p>
 
         </div>
     `;
 
 }
 
-async function getMovies() {
+async function getposes() {
 
     try {
         showLoading();
         const response = await fetch(API_URL);
-        movies = await response.json();
+        poses = await response.json();
+        console.log(poses);
+        filteredposes = poses;
 
-        filteredMovies = movies;
-
-        displayMovies();
+        displayposes();
 
     } catch (error) {
 
-        moviesContainer.innerHTML = `
+        posesContainer.innerHTML = `
             <div class="col-12">
                 <div class="alert alert-danger text-center">
                     ${error.message}
@@ -51,14 +51,14 @@ async function getMovies() {
 
 }
 
-function displayMovies() {
+function displayposes() {
 
-    const start = (currentPage - 1) * moviesPerPage;
-    const end = start + moviesPerPage;
+    const start = (currentPage - 1) * posesPerPage;
+    const end = start + posesPerPage;
 
-    const moviesToShow = filteredMovies.slice(start, end);
+    const posesToShow = filteredposes.slice(start, end);
 
-    moviesContainer.innerHTML = moviesToShow
+    posesContainer.innerHTML = posesToShow
         .map(movie => createMovieCard(movie))
         .join("");
 
@@ -87,6 +87,10 @@ function createMovieCard(pose) {
                     <p class="mb-2">
                         <span class="badge bg-secondary">${pose.sanskrit_name}</span>
                     </p>
+
+                    <h6 class="text-dark mb-2">
+                        ${pose.sanskrit_name_adapted}
+                    </h6>
 
                     <hr>
 
@@ -118,7 +122,7 @@ function createPagination() {
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
 
-    const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
+    const totalPages = Math.ceil(filteredposes.length / posesPerPage);
 
     for (let i = 1; i <= totalPages; i++) {
 
@@ -135,7 +139,7 @@ function goToPage(page) {
 
     currentPage = page;
 
-    displayMovies();
+    displayposes();
 
     window.scrollTo({
         top: 0,
@@ -148,7 +152,7 @@ function applyFilters() {
 
     const searchValue = document.getElementById("searchInput").value.toLowerCase();
 
-    filteredMovies = movies.filter(movie => {
+    filteredposes = poses.filter(movie => {
 
         const matchesSearch =
             movie.english_name.toLowerCase().includes(searchValue);
@@ -157,7 +161,7 @@ function applyFilters() {
     });
 
     currentPage = 1;
-    displayMovies();
+    displayposes();
 }
 
-getMovies();
+getposes();
