@@ -19,7 +19,7 @@ function showLoading() {
                 <span class="visually-hidden">Loading...</span>
             </div>
 
-            <p class="mt-3">Loading Studio Ghibli poses...</p>
+            <p class="mt-3">Loading poses...</p>
 
         </div>
     `;
@@ -91,6 +91,12 @@ function createMovieCard(pose) {
                     <h6 class="text-dark mb-2">
                         ${pose.sanskrit_name_adapted}
                     </h6>
+
+                    <hr>
+
+                    <h7 class="text-dark mb-2">
+                        ${pose.translation_name}
+                    </h7>
 
                     <hr>
 
