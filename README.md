@@ -9,6 +9,10 @@ A responsive yoga pose discovery application built with **HTML, CSS, Bootstrap 5
 - ↕️ **Sorting** by English name, reverse name, difficulty, or Sanskrit name.
 - ❤️ **Favorites** saved in browser `localStorage`, including a favorites-only view.
 - 🎲 **Random pose** picker based on the current filtered results.
+- 🧘 **Routine builder**: add and remove poses, arrange a sequence, and set a duration for each pose.
+- ✨ **Personalized sequence generator** based on practice goal (flexibility, strength, balance, relaxation, or full-body), experience level, and available time.
+- 💾 **Saved routines** stored locally, with load and text-export options.
+- ⏱️ **Routine summary** with pose count and total practice time.
 - 📖 **Pose details modal** with image, Sanskrit name, translation, description, benefits, difficulty, and category.
 - 📄 **Configurable pagination** (6, 9, 12, or 18 results per page).
 - 📊 **Library statistics** for poses, categories, and saved favorites.
@@ -42,7 +46,7 @@ This project uses the [Yoga API](https://github.com/alexcumplido/yoga-api).
 - Poses: `https://yoga-api-nzy4.onrender.com/v1/poses`
 - Categories: `https://yoga-api-nzy4.onrender.com/v1/categories`
 
-The categories endpoint is used to enrich poses with category and difficulty metadata when available. The application still loads the main pose collection if category metadata cannot be retrieved.
+The categories endpoint is used to enrich poses with category and difficulty metadata when available. Difficulty labels are normalized so common API variants (such as Advanced and Expert) filter consistently. The application still loads the main pose collection if category metadata cannot be retrieved.
 
 ## 📁 Project Structure
 
@@ -63,7 +67,7 @@ yoga/
 
 ## 💾 Favorites
 
-Favorites are stored locally in the browser under the `yogaPoseExplorerFavorites` key. They are not uploaded to a server and will remain available in the same browser unless its site data is cleared.
+Favorites, the active routine, and saved routines are stored locally in the browser under `yogaPoseExplorerFavorites`, `yogaPoseExplorerRoutine`, and `yogaPoseExplorerSavedRoutines`. They are not uploaded to a server and remain available in the same browser unless its site data is cleared.
 
 ## ⚠️ Notes
 

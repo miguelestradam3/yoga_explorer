@@ -117,6 +117,82 @@
             <nav id="pagination" class="d-flex justify-content-center my-5" aria-label="Pose pages"></nav>
         </div>
     </section>
+    <section class="section routine-section" id="routineSection">
+        <div class="container pb-5">
+            <div class="routine-panel">
+                <div class="routine-heading">
+                    <div>
+                        <p class="eyebrow mb-1">MAKE IT YOUR PRACTICE</p>
+                        <h2 class="section-title mb-2">Your yoga routine</h2>
+                        <p class="routine-intro">Build a sequence pose by pose, or generate a personalized session based on your goal, experience, and available time.</p>
+                    </div>
+                    <div class="routine-summary">
+                        <div><strong id="routineCount">0</strong><span>POSES</span></div>
+                        <div><strong id="routineDuration">0 min</strong><span>DURATION</span></div>
+                    </div>
+                </div>
+
+                <div class="routine-generator">
+                    <div class="d-flex align-items-center gap-2 mb-3"><i class="bi bi-magic"></i><h3>Build a personalized sequence</h3></div>
+                    <div class="row g-3 align-items-end">
+                        <div class="col-12 col-md-4">
+                            <label class="form-label" for="routineGoal">Practice goal</label>
+                            <select id="routineGoal" class="form-select">
+                                <option value="general">Full-body balance</option>
+                                <option value="flexibility">Flexibility</option>
+                                <option value="strength">Strength</option>
+                                <option value="balance">Balance</option>
+                                <option value="relaxation">Relaxation</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="form-label" for="routineLevel">Experience level</label>
+                            <select id="routineLevel" class="form-select">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="form-label" for="routineTarget">Available time</label>
+                            <select id="routineTarget" class="form-select">
+                                <option value="10">10 minutes</option>
+                                <option value="15" selected>15 minutes</option>
+                                <option value="20">20 minutes</option>
+                                <option value="30">30 minutes</option>
+                                <option value="45">45 minutes</option>
+                            </select>
+                        </div>
+                        <div class="col-12 d-flex flex-wrap align-items-center gap-2">
+                            <button id="generateRoutine" class="btn btn-accent"><i class="bi bi-stars me-1"></i> Generate my sequence</button>
+                            <span id="routineFeedback" class="routine-feedback" aria-live="polite"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="routine-list-header">
+                    <div><h3>Your sequence</h3><p>Adjust the time for each pose or remove poses you don't need.</p></div>
+                    <button id="clearRoutine" class="btn btn-outline-light btn-sm">Clear routine</button>
+                </div>
+                <div id="routineList" class="routine-list" aria-live="polite"></div>
+
+                <div class="routine-actions">
+                    <div class="routine-save-fields">
+                        <label class="visually-hidden" for="routineName">Routine name</label>
+                        <input id="routineName" class="form-control" type="text" maxlength="60" placeholder="Name this routine (optional)">
+                        <button id="saveRoutine" class="btn btn-outline-light"><i class="bi bi-bookmark-plus me-1"></i> Save routine</button>
+                    </div>
+                    <div class="routine-load-fields">
+                        <label class="visually-hidden" for="savedRoutineSelect">Saved routines</label>
+                        <select id="savedRoutineSelect" class="form-select"><option value="">Load saved routine...</option></select>
+                        <button id="loadRoutine" class="btn btn-outline-light">Load</button>
+                        <button id="exportRoutine" class="btn btn-outline-light" title="Export routine as a text file"><i class="bi bi-download me-1"></i> Export</button>
+                    </div>
+                </div>
+                <p class="routine-disclaimer"><i class="bi bi-info-circle me-1"></i>Generated sequences are suggestions based on pose descriptions and benefits. Move within your comfort level and consult a qualified instructor if you're unsure about a pose.</p>
+            </div>
+        </div>
+    </section>
 </main>
 
 <div class="modal fade" id="poseModal" tabindex="-1" aria-labelledby="poseModalTitle" aria-hidden="true">
