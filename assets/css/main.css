@@ -182,6 +182,8 @@ a { color: #8bc5e2; }
 .routine-item-info { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; }
 .routine-item-info strong { overflow: hidden; color: #f1f4f6; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
 .routine-item-info small { color: #8e9ba3; font-size: 10px; }
+.routine-details { display: inline-flex; align-items: center; justify-content: center; gap: 3px; min-height: 36px; padding: 5px 9px; color: #c5d6df; background: transparent; border: 1px solid #3a5968; border-radius: 8px; font-size: 11px; white-space: nowrap; }
+.routine-details:hover, .routine-details:focus-visible { color: #fff; background: #173747; border-color: #56849a; }
 .routine-time { width: 67px; min-height: 36px; padding: 5px 8px; color: white; background: #080b0d; border: 1px solid #303940; border-radius: 8px; font-size: 11px; }
 .routine-remove { display: grid; place-items: center; width: 34px; height: 34px; color: #c3ccd1; background: transparent; border: 1px solid #3a464d; border-radius: 8px; }
 .routine-remove:hover { color: #ff8295; border-color: #a84c5b; }
@@ -202,5 +204,7 @@ a { color: #8bc5e2; }
     .routine-save-fields, .routine-load-fields { flex-wrap: wrap; }
     .routine-save-fields .form-control, .routine-load-fields .form-select { flex: 1 1 100%; }
     .routine-item { gap: 8px; padding: 9px; }
+    .routine-details { width: 34px; padding: 5px; }
+    .routine-details span { display: none; }
     .routine-item-info strong { font-size: 11px; }
 }

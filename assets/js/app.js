@@ -250,6 +250,7 @@ function renderRoutine() {
     $("routineDuration").textContent = `${totalMinutes} min`;
     if (!items.length) list.innerHTML = `<div class="routine-empty"><i class="bi bi-calendar2-heart"></i><p>Your routine is empty. Add poses from the library or generate a sequence below.</p></div>`;
     else list.innerHTML = items.map((item, index) => `<div class="routine-item"><span class="routine-number">${index + 1}</span><div class="routine-item-info"><strong>${escapeHTML(item.pose.english_name)}</strong><small>${escapeHTML(getDifficulty(item.pose))} · ${escapeHTML(getCategory(item.pose))}</small></div>
+        <button class="routine-details" type="button" data-routine-details="${escapeHTML(item.id)}"><i class="bi bi-eye me-1"></i><span>Details</span></button>
         <label class="visually-hidden" for="routine-time-${index}">Minutes for ${escapeHTML(item.pose.english_name)}</label><select class="routine-time" id="routine-time-${index}" data-routine-time="${escapeHTML(item.id)}" aria-label="Minutes for ${escapeHTML(item.pose.english_name)}">${[1,2,3,4,5,7,10,15].map(n => `<option value="${n}" ${item.minutes === n ? "selected" : ""}>${n}m</option>`).join("")}</select>
         <button class="routine-remove" data-remove-routine="${escapeHTML(item.id)}" aria-label="Remove ${escapeHTML(item.pose.english_name)}"><i class="bi bi-x-lg"></i></button></div>`).join("");
     const saved = $("savedRoutineSelect");
@@ -336,6 +337,12 @@ posesContainer.addEventListener("click", event => {
 $("poseModalBody").addEventListener("click", event => { const add = event.target.closest("[data-add-routine]"); if (add) addToRoutine(add.dataset.addRoutine); });
 paginationContainer.addEventListener("click", event => { const button = event.target.closest("[data-page]"); if (button && !button.disabled) goToPage(Number(button.dataset.page)); });
 $("routineList").addEventListener("click", event => {
+    const details = event.target.closest("[data-routine-details]");
+    if (details) {
+        const pose = poses.find(item => getPoseId(item) === details.dataset.routineDetails);
+        if (pose) showPoseDetails(pose);
+        return;
+    }
     const remove = event.target.closest("[data-remove-routine]");
     if (remove) { routine = routine.filter(item => item.id !== remove.dataset.removeRoutine); persistRoutine(); renderRoutine(); applyFilters(); }
 });
