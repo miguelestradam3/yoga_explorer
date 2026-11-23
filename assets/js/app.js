@@ -88,10 +88,30 @@ async function fetchJSON(url) {
 async function getPoses() {
     showLoading();
     try {
-        const [poseData, categoryResult] = await Promise.all([
-            fetchJSON(POSES_URL), fetchJSON(CATEGORIES_URL).catch(() => [])
+        // Fetch all poses plus level‑specific endpoints to ensure we have poses for each difficulty.
+        const [poseDataAll, poseDataBeginner, poseDataIntermediate, categoryResult] = await Promise.all([
+            fetchJSON(POSES_URL),
+            fetchJSON(`${POSES_URL}?level=beginner`).catch(() => []),
+            fetchJSON(`${POSES_URL}?level=intermediate`).catch(() => []),
+            fetchJSON(CATEGORIES_URL).catch(() => [])
         ]);
-        const rawPoses = Array.isArray(poseData) ? poseData : (poseData.poses || []);
+        // Combine and deduplicate poses by id.
+        const poseMap = new Map();
+        const addPoses = arr => {
+            if (Array.isArray(arr)) {
+                arr.forEach(p => { if (p && p.id != null) poseMap.set(String(p.id), p); });
+            } else if (arr && Array.isArray(arr.poses)) {
+                arr.poses.forEach(p => { if (p && p.id != null) poseMap.set(String(p.id), p); });
+            }
+        };
+        addPoses(poseDataAll);
+        addPoses(poseDataBeginner);
+        addPoses(poseDataIntermediate);
+        const rawPoses = Array.from(poseMap.values());
+
+
+
+
         const metadata = new Map();
         const categories = Array.isArray(categoryResult) ? categoryResult : (categoryResult.categories || []);
         categories.forEach(category => {
@@ -124,7 +144,7 @@ async function getPoses() {
 }
 function populateDifficultyFilter() {
     const labels = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced / Expert", all: "All levels" };
-    const found = new Set(poses.map(pose => getDifficultyKey(pose)).filter(key => key !== "unknown" && key !== "all"));
+    const found = new Set(poses.map(pose => getDifficultyKey(pose)).filter(key => key !== "unknown" && key !== "all" && key !== "notspecified"));
     const order = ["beginner", "intermediate", "advanced"];
     const options = order.filter(key => found.has(key)).map(key => `<option value="${key}">${labels[key]}</option>`);
     [...found].filter(key => !order.includes(key)).sort().forEach(key => options.push(`<option value="${escapeHTML(key)}">${escapeHTML(key.replace(/([a-z])([0-9])/i, "$1 $2"))}</option>`));
