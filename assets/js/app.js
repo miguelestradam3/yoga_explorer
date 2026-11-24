@@ -61,13 +61,16 @@ function getDifficultyKey(poseOrValue) {
     const value = normalize(raw).replace(/[\s_-]+/g, "");
     if (["beginner", "basic", "easy", "novice", "1"].includes(value)) return "beginner";
     if (["intermediate", "moderate", "medium", "2"].includes(value)) return "intermediate";
-    if (["advanced", "expert", "difficult", "hard", "3"].includes(value)) return "advanced";
+    // Separate expert from advanced
+    if (value === "expert") return "expert";
+    if (["advanced", "difficult", "hard", "3"].includes(value)) return "advanced";
     if (["alllevels", "all", "any"].includes(value)) return "all";
     return value || "unknown";
 }
 function getDifficulty(pose) {
     const raw = String(getDifficultyRaw(pose));
     const key = getDifficultyKey(raw);
+    if (key === "expert") return "Expert";
     if (key === "advanced") return /expert/i.test(raw) ? "Expert" : "Advanced";
     if (key === "beginner") return "Beginner";
     if (key === "intermediate") return "Intermediate";
@@ -88,11 +91,12 @@ async function fetchJSON(url) {
 async function getPoses() {
     showLoading();
     try {
-        // Fetch all poses plus level‑specific endpoints to ensure we have poses for each difficulty.
-        const [poseDataAll, poseDataBeginner, poseDataIntermediate, categoryResult] = await Promise.all([
+        // Fetch all poses plus level-specific endpoints to ensure we have poses for each difficulty.
+        const [poseDataAll, poseDataBeginner, poseDataIntermediate, poseDataExpert, categoryResult] = await Promise.all([
             fetchJSON(POSES_URL),
             fetchJSON(`${POSES_URL}?level=beginner`).catch(() => []),
             fetchJSON(`${POSES_URL}?level=intermediate`).catch(() => []),
+            fetchJSON(`${POSES_URL}?level=expert`).catch(() => []),
             fetchJSON(CATEGORIES_URL).catch(() => [])
         ]);
         // Combine and deduplicate poses by id.
@@ -107,10 +111,8 @@ async function getPoses() {
         addPoses(poseDataAll);
         addPoses(poseDataBeginner);
         addPoses(poseDataIntermediate);
+        addPoses(poseDataExpert);
         const rawPoses = Array.from(poseMap.values());
-
-
-
 
         const metadata = new Map();
         const categories = Array.isArray(categoryResult) ? categoryResult : (categoryResult.categories || []);
@@ -143,9 +145,9 @@ async function getPoses() {
     }
 }
 function populateDifficultyFilter() {
-    const labels = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced / Expert", all: "All levels" };
+    const labels = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced / Expert", expert: "Expert", all: "All levels" };
     const found = new Set(poses.map(pose => getDifficultyKey(pose)).filter(key => key !== "unknown" && key !== "all" && key !== "notspecified"));
-    const order = ["beginner", "intermediate", "advanced"];
+    const order = ["beginner", "intermediate", "advanced", "expert"];
     const options = order.filter(key => found.has(key)).map(key => `<option value="${key}">${labels[key]}</option>`);
     [...found].filter(key => !order.includes(key)).sort().forEach(key => options.push(`<option value="${escapeHTML(key)}">${escapeHTML(key.replace(/([a-z])([0-9])/i, "$1 $2"))}</option>`));
     difficultyFilter.innerHTML = '<option value="">All levels</option>' + options.join("");
@@ -179,7 +181,7 @@ function applyFilters() {
     sortPoses(); currentPage = 1; displayPoses();
 }
 function sortPoses() {
-    const difficultyOrder = { beginner: 1, intermediate: 2, advanced: 3, all: 4, unknown: 99 };
+    const difficultyOrder = { beginner: 1, intermediate: 2, advanced: 3, expert: 4, all: 5, unknown: 99 };
     const sortBy = sortFilter.value;
     filteredPoses.sort((a, b) => {
         if (sortBy === "name-desc") return (b.english_name || "").localeCompare(a.english_name || "");
